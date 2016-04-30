@@ -7,31 +7,34 @@ var board = d3.select('.board').append('svg')
 
 //create data of enemies
 var createEnemies = function() {
-  var allEnemies = [];
-
+  var listOfEnemies = [];
   for (var i = 0; i < 20; i++) {
     var enemy = {
       id: i,
       x: Math.random() * 700,
       y: Math.random() * 400
     };
-    allEnemies.push(enemy);
+    listOfEnemies.push(enemy);
   }
-  return allEnemies;
+  return listOfEnemies;
 };
 
 
 
+
+
 // Enter
-var enemies = board.selectAll('circles')
+var enemies = board.selectAll('enemies')
                    .data(createEnemies())
                    .enter()
                    .append('circle')
                    .attr('cx', function(item) { return item.x; })
                    .attr('cy', function(item) { return item.y; })
                    .attr('r', 10)
-                   .attr('class', 'circles')
+                   .attr('class', 'enemies')
                    .attr('fill', 'black');
+
+
 
 var moveEnemies = function() {
   enemies
@@ -64,6 +67,50 @@ var player = board.selectAll('player')
                    .attr('class', 'player')
                    .attr('fill', 'red')
                    .call(drag);
+
+
+var listOfEnemies = document.getElementsByClassName('enemies');
+var playerLocation = document.getElementsByClassName('player');
+var collisions = 0;
+var highestScore = 0;
+var currentScore = 0;
+var checkCollision = function() {
+  currentScore++;
+
+
+  //find highest score
+  if (currentScore > highestScore) {
+    highestScore = currentScore;
+  }
+
+  d3.selectAll('.current').select('span').text(currentScore);
+  d3.selectAll('.highscore').select('span').text(highestScore);
+  
+  // grab location for player
+  var xPlayer = playerLocation[0].getAttribute('cx');
+  var yPlayer = playerLocation[0].getAttribute('cy');
+
+  // grab location for each enemey
+  for (var i = 0; i < listOfEnemies.length; i++) {
+    var xEnemy = listOfEnemies[i].getAttribute('cx');
+    var yEnemy = listOfEnemies[i].getAttribute('cy');
+
+    var distance = Math.sqrt(Math.pow(xPlayer - xEnemy, 2) - Math.pow(yPlayer - yEnemy, 2));
+
+    // collision occured
+    // reset currentScore and increase collision count
+    if (distance < 5) {
+      currentScore = 0;
+      collisions++;
+      d3.selectAll('.collisions').select('span').text(collisions);
+      
+    }
+  }
+};
+
+setInterval(function() {
+  checkCollision();
+}, 10);
 
 
 setInterval(function() {
