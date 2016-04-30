@@ -10,7 +10,6 @@ var createEnemies = function() {
   var listOfEnemies = [];
   for (var i = 0; i < 20; i++) {
     var enemy = {
-      id: i,
       x: Math.random() * 700,
       y: Math.random() * 400
     };
@@ -36,14 +35,8 @@ var moveEnemies = function() {
   enemies
  .transition()
  .duration(1000)
-
- // rotate(-60, 150, 130)
- // item.x
- // .attr('transform', function(item) { return 'rotate(' + item.x + ', ' + item.y + ',' + '+360)'; })
- // .attr('transform', function(item) { return 'translate(' + item.x + ', ' + item.y + ')' + 'rotate (+360)'; })
  .attr('x', function(item) { return 700 * Math.random(); })
  .attr('y', function(item) { return 400 * Math.random(); });
- 
 };
 
 var dragMove = function (d) {
@@ -61,7 +54,7 @@ var drag = d3.behavior.drag()
 
 
 var player = board.selectAll('player')
-                   .data([{ id: 'player', x: 350, y: 200 }])
+                   .data([{ x: 350, y: 200 }])
                    .enter()
                    .append('circle')
                    .attr('cx', function(d) { return d.x; })
