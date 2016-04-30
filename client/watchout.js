@@ -36,10 +36,35 @@ var enemies = board.selectAll('circles')
 var moveEnemies = function() {
   enemies
  .transition()
-
+ .duration(1000)
  .attr('cx', function(item) { return 700 * Math.random(); })
  .attr('cy', function(item) { return 400 * Math.random(); });
 };
+
+var dragMove = function (d) {
+  var x = d3.event.x;
+  var y = d3.event.y;
+  d3.select(this).attr('cx', x);
+  d3.select(this).attr('cy', y);
+};
+
+
+var drag = d3.behavior.drag()
+    .on('drag', dragMove);
+
+
+
+var player = board.selectAll('player')
+                   .data([{ id: 'player', x: 350, y: 200 }])
+                   .enter()
+                   .append('circle')
+                   .attr('cx', function(d) { return d.x; })
+                   .attr('cy', function(d) { return d.y; })
+                   .attr('r', 10)
+                   .attr('class', 'player')
+                   .attr('fill', 'red')
+                   .call(drag);
+
 
 setInterval(function() {
   moveEnemies();
