@@ -19,20 +19,16 @@ var createEnemies = function() {
   return listOfEnemies;
 };
 
-
-
-
-
-// Enter
 var enemies = board.selectAll('enemies')
                    .data(createEnemies())
                    .enter()
-                   .append('circle')
-                   .attr('cx', function(item) { return item.x; })
-                   .attr('cy', function(item) { return item.y; })
-                   .attr('r', 10)
+                   .append('svg:image')
+                   .attr('width', 20)
+                   .attr('height', 24)
+                   .attr('x', function(item) { return item.x; })
+                   .attr('y', function(item) { return item.y; })
                    .attr('class', 'enemies')
-                   .attr('fill', 'black');
+                   .attr('xlink:href', 'img/123.png');
 
 
 
@@ -40,8 +36,14 @@ var moveEnemies = function() {
   enemies
  .transition()
  .duration(1000)
- .attr('cx', function(item) { return 700 * Math.random(); })
- .attr('cy', function(item) { return 400 * Math.random(); });
+
+ // rotate(-60, 150, 130)
+ // item.x
+ // .attr('transform', function(item) { return 'rotate(' + item.x + ', ' + item.y + ',' + '+360)'; })
+ // .attr('transform', function(item) { return 'translate(' + item.x + ', ' + item.y + ')' + 'rotate (+360)'; })
+ .attr('x', function(item) { return 700 * Math.random(); })
+ .attr('y', function(item) { return 400 * Math.random(); });
+ 
 };
 
 var dragMove = function (d) {
@@ -49,6 +51,7 @@ var dragMove = function (d) {
   var y = d3.event.y;
   d3.select(this).attr('cx', x);
   d3.select(this).attr('cy', y);
+
 };
 
 
@@ -92,8 +95,8 @@ var checkCollision = function() {
 
   // grab location for each enemey
   for (var i = 0; i < listOfEnemies.length; i++) {
-    var xEnemy = listOfEnemies[i].getAttribute('cx');
-    var yEnemy = listOfEnemies[i].getAttribute('cy');
+    var xEnemy = listOfEnemies[i].getAttribute('x');
+    var yEnemy = listOfEnemies[i].getAttribute('y');
 
     var distance = Math.sqrt(Math.pow(xPlayer - xEnemy, 2) - Math.pow(yPlayer - yEnemy, 2));
 
